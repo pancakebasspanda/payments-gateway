@@ -1,0 +1,53 @@
+[
+  {
+    "httpRequest" : {
+      "method" : "POST",
+      "body" : "{\"Name\":\"Bruce\",\"Surname\":\"Wayne\",\"Postcode\":\"G15 2DN\",\"CardType\":\"VISA\",\"CardNum\":\"378282246310005\",\"Expiry\":\"23/4\",\"Cvv\":342}",
+      "path" : "/api/v1/validate"
+    },
+    "httpResponse" : {
+      "body" : "{\"status\":\"valid\"}",
+      "statusCode": 200
+    }
+  },
+  {
+    "httpRequest" : {
+      "method" : "POST",
+      "body" : {
+        "value": "{\"Card\":{\"Name\":\"Bruce\",\"Surname\":\"Banner\",\"Postcode\":\"G15 2DN\",\"CardType\":\"VISA\"\n,\"CardNum\":\"378282246310005\",\"Expiry\":\"23/4\",\"Cvv\":342},\"Amount\":20.5,\"Currency\"\n:\"GBP\"}\n",
+        "matchType": "ONLY_MATCHING_FIELDS"
+      },
+      "path" : "/api/v1/validate"
+    },
+    "httpResponse" : {
+      "body" : "{\"status\":\"invalid\",\"reason\": \"invalid cvv\"}",
+      "statusCode": 200
+    }
+  },
+  {
+    "httpRequest" : {
+      "method" : "POST",
+      "body" : {
+        "type": "JSON",
+        "json": {
+          "Card":{
+            "Name":"Bruce",
+            "Surname":"Wayne",
+            "Postcode":"G15 2DN",
+            "CardType":"VISA",
+            "CardNum":"378282246310005",
+            "Expiry":"23/4",
+            "Cvv":342
+          },
+          "Amount":20.5,
+          "Currency":"GBP"
+        }
+      },
+      "path" : "/api/v1/authorize"
+    },
+    "httpResponse" : {
+      "body" : "{\"code\":\"00\",\"reason\": \"approved and completed successfully\"}}",
+      "statusCode": 200
+    }
+  }
+]

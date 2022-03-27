@@ -1,0 +1,85 @@
+syntax = "proto3";
+
+package payments;
+
+option go_package = "payments_gateway/protos:payments";
+
+import "google/protobuf/timestamp.proto";
+
+service Payments {
+  rpc ProcessPayment(ProcessPaymentRequest) returns (ProcessPaymentResponse);
+  rpc GetPayment(GetPaymentRequest) returns (GetPaymentResponse);
+}
+
+enum Status {
+  UNKNOWN = 0;
+  APPROVED = 1;
+  REJECTED = 2;
+  PENDING = 3;
+  COMPLETED = 4;
+}
+
+enum PaymentType {
+  UNDEFINED = 0;
+  CARD = 1;
+  MOBILE_WALLET = 2;
+  EFT = 3;
+}
+
+enum CardType {
+  VISA = 0;
+  MASTERCARD = 1;
+  AMERICAN_EXPRESS = 2;
+}
+
+
+message BillingDetails {
+  string name = 1;
+  string surname = 2;
+  string email = 3;
+  string phone =4;
+  string address_line_1 = 5;
+  string address_line_2 = 6;
+  string postcode = 7;
+}
+
+message ProcessPaymentRequest {
+  BillingDetails billing_details = 1;
+  string card_number = 2;
+  string expiry = 3;
+  double amount = 4;
+  string currency = 5;
+  int32 cvv = 6;
+  PaymentType payment_type = 7;
+  CardType card_type = 8;
+}
+
+message Error {
+  string code = 1;
+  string reason = 2;
+}
+
+message ProcessPaymentResponse {
+  string reference = 1;
+  Status status = 2;
+  string status_reason =3;
+  Error error = 4;
+}
+
+message GetPaymentRequest {
+  string ref = 1;
+
+}
+
+message GetPaymentResponse {
+  string ref = 1;
+  string card_number = 2;
+  double amount = 3;
+  string currency = 4;
+  PaymentType payment_type =5;
+  Status status = 6;
+  string status_reason =7;
+  google.protobuf.Timestamp updated_timestamp =8;
+  BillingDetails billing_details = 9;
+  google.protobuf.Timestamp insert_timestamp = 10;
+}

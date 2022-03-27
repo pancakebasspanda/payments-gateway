@@ -1,0 +1,30 @@
+version: "3.7"
+
+services:
+  postgresql:
+    image: postgres:11.6-alpine
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-q", "-d", "payments", "-U", "user1" ]
+      timeout: 45s
+      interval: 10s
+      retries: 10
+    restart: always
+    environment:
+      - POSTGRES_USER=user1
+      - POSTGRES_PASSWORD=123
+      - POSTGRES_DB=payments
+    volumes:
+      - ./scripts/db:/docker-entrypoint-initdb.d/
+    ports:
+      - "5432:5432"
+
+  mockServer:
+    image: mockserver/mockserver:latest
+    ports:
+      - "1080:1080"
+    environment:
+      MOCKSERVER_WATCH_INITIALIZATION_JSON: "true"
+      MOCKSERVER_PROPERTY_FILE: /config/mockserver.properties
+      MOCKSERVER_INITIALIZATION_JSON_PATH: /config/initializerJson.json
+    volumes:
+      - ./config:/config
