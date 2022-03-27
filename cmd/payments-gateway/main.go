@@ -56,6 +56,8 @@ func main() {
 	grpcServer := grpc.NewServer(opts...)
 	protos.RegisterPaymentsServer(grpcServer, server.New(pgClient, aqBankClient))
 
+	log.WithField("port", port).Info("Starting payments-gateway gRPC server")
+
 	grpcServer.Serve(lis)
 
 }
