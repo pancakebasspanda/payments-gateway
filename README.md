@@ -61,10 +61,10 @@ $ go run cmd/payments-gateway/main.go
 ***Integration Tests*** <br />
 Create test DB and test tables of the same schema within the postgres service running in the docker container. Then create 
 a new instance of the client  connecting to the test DB in which to run go tests created for the storage package. 
-These are more reliable and realistic as compared to mock tests.
+These are more reliable and realistic as compared to mock tests.<br />
 ***Submit method in the Bank simulator*** <br />
 Once all transactions are authorized, at the end of the day we should submit all of them to find out if they had been 
-paid/completed. Some work has been done for this in  the bank package already.
+paid/completed. Some work has been done for this in  the bank package already.<br />
 ***Clean up code in regard to TODO's left in the codebase*** <br />
 Some examples here include optimizing parameters in functions, adding concurrency as to calling methods in the bank 
 simulator and saving to the database
