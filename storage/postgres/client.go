@@ -38,7 +38,7 @@ func New(pool PgPool) *PgxStorage {
 func (p *PgxStorage) AddPaymentInfo(ctx context.Context, refID string, request *protos.ProcessPaymentRequest, status protos.Status, reason string) error {
 	maskedCard := maskCardNumber(request.GetCardNumber(), 'X')
 
-	res, err := p.pool.Exec(ctx,
+	_, err := p.pool.Exec(ctx,
 		_insertPaymentInfo,
 		convertStringToPgType(refID),
 		convertStringToPgType(request.GetBillingDetails().GetName()),
@@ -58,10 +58,6 @@ func (p *PgxStorage) AddPaymentInfo(ctx context.Context, refID string, request *
 
 	if err != nil {
 		return err
-	}
-
-	if res.RowsAffected() == 0 {
-		return errInsertingPaymentInfo
 	}
 
 	return nil
@@ -99,7 +95,7 @@ func (p *PgxStorage) GetPaymentInfo(ctx context.Context, referenceId string) (*p
 		Amount:           amount.Float,
 		Currency:         currency.String,
 		PaymentType:      protos.PaymentType(protos.PaymentType_value[paymentType.String]),
-		Status:           protos.Status(protos.PaymentType_value[status.String]),
+		Status:           protos.Status(protos.Status_value[status.String]),
 		StatusReason:     status_reason.String,
 		UpdatedTimestamp: timestamppb.New(updatedTime.Time),
 		InsertTimestamp:  timestamppb.New(insertTime.Time),

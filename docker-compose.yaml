@@ -1,5 +1,4 @@
 version: "3.7"
-
 services:
   postgresql:
     image: postgres:11.6-alpine
@@ -17,7 +16,22 @@ services:
       - ./scripts/db:/docker-entrypoint-initdb.d/
     ports:
       - "5432:5432"
-
+  integration-test:
+    image: postgres:11.6-alpine
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-q", "-d", "payments_test", "-U", "user1" ]
+      timeout: 45s
+      interval: 10s
+      retries: 10
+    restart: always
+    environment:
+      - POSTGRES_USER=user1
+      - POSTGRES_PASSWORD=123
+      - POSTGRES_DB=payments_test
+    volumes:
+      - ./scripts/db:/docker-entrypoint-initdb.d/
+    ports:
+      - "5433:5432"
   mockServer:
     image: mockserver/mockserver:latest
     ports:

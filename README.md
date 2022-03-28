@@ -58,14 +58,10 @@ $ go run cmd/payments-gateway/main.go
 
 ```
 ## Upcoming Changes and Features
-***Integration Tests*** <br />
-Create test DB and test tables of the same schema within the postgres service running in the docker container. Then create 
-a new instance of the client  connecting to the test DB in which to run go tests created for the storage package. 
-These are more reliable and realistic as compared to mock tests.<br />
 ***Submit method in the Bank simulator*** <br />
 Once all transactions are authorized, at the end of the day we should submit all of them to find out if they had been 
 paid/completed. Some work has been done for this in  the bank package already.<br />
-***Clean up code in regard to TODO's left in the codebase*** <br />
+***Clean up code in regard to TODO's left in the codebase, plus increase test code coverage*** <br />
 Some examples here include optimizing parameters in functions, adding concurrency as to calling methods in the bank 
 simulator and saving to the database
 
@@ -75,8 +71,13 @@ protoc --go_out=. --go_opt=paths=source_relative --go-grpc_out=. --go-grpc_opt=p
 ```
 
 ## Running tests
+First we need to start our docker test database in which the tests interact with.
 ```shell
-go test ./...
+docker-compose up integration-test 
+```
+Then you can run all tests with
+```shell
+go test $(go list ./... | grep -v /vendor/ | grep -v /cmd/) -race
 ```
 
 ## Packages

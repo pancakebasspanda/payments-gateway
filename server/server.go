@@ -60,7 +60,7 @@ func (s *server) ProcessPayment(ctx context.Context, request *protos.ProcessPaym
 		}, status.Error(codes.InvalidArgument, "validating payment")
 	}
 
-	// Authorise the users cars details and funds for the purchase
+	// Authorise the users card details and funds for the purchase
 	code, reason, err := s.aqBank.Authorize(ctx, model.ConvertToTransaction(refID, request))
 	if err != nil {
 		log.WithField("request", request).WithError(err).Error("authorize transaction")
@@ -104,7 +104,7 @@ func (s *server) Register(grpcService *grpc.Server) {
 	protos.RegisterPaymentsServer(grpcService, s)
 }
 
-// valid reports whether v is the zero value for its type.
+// validParams reports whether v is the zero value for its type.
 func validParams(params ...interface{}) bool {
 	for _, p := range params {
 		if reflect.ValueOf(p).IsZero() {

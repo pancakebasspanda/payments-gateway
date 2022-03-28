@@ -57,6 +57,7 @@ func New() Client {
 	}
 }
 
+// Validate calls the acquiring banks validate endpoint
 func (b *Bank) Validate(ctx context.Context, card model.Card) (bool, error) {
 	body, err := json.Marshal(card)
 	if err != nil {
@@ -101,6 +102,7 @@ func (b *Bank) Validate(ctx context.Context, card model.Card) (bool, error) {
 	return false, nil
 }
 
+// Authorize calls the acquiring banks authorize endpoint
 func (b *Bank) Authorize(ctx context.Context, transaction model.Transaction) (string, string, error) {
 	body, err := json.Marshal(transaction)
 	if err != nil {

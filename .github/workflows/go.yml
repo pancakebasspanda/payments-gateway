@@ -2,9 +2,9 @@ name: Go
 
 on:
   push:
-    branches: [ main ]
+    branches: [ master, develop ]
   pull_request:
-    branches: [ main ]
+    branches: [ master, develop ]
 
 jobs:
 
@@ -18,8 +18,11 @@ jobs:
       with:
         go-version: 1.17
 
-    - name: Build
-      run: go build -v ./...
+      - name: fmt
+        run: go fmt $(go list ./... | grep -v '/vendor/') | awk '{print "Please run go fmt"; exit 1 }'
 
-    - name: Test
-      run: go test -v ./...
+      - name: build
+        run: go vet $(go list ./... | grep -v '/vendor/') | awk '{print "Please run go vet"; exit 1 }'
+
+      - name: test
+        run:  go test $(go list ./... | grep -v /vendor/ | grep -v /cmd/ | grep -v /integration-tests/) -race -coverprofile=fullcover.out -coverpkg=./... ./...
