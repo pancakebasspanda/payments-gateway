@@ -9,21 +9,20 @@ a merchant to
 The payment gateway repo also contains configuration for a Bank simulator that is part
 of the payments lifecycle and used for validating and authorizing payments.
 
-The Bank simulator was created using [MockServer](https://www.mock-server.com/)
+The Bank simulator was created using [MockServer](https://www.mock-server.com/).
 Since a simulator would return specific outputs for a given input as well as it would being
 an external service, MockServer was used due to its easy configuration and simplicity. 
 See `config/initializerJson.json` for the configuration. The actual server is run in a docker container.
 
 The payment-gateway service also interacts with a Postgres db that is defined in
-`scripts/db/init.sql`. The db s responsible for storage of payment details. 
+`scripts/db/init.sql`. The db is responsible for CRUD of payment details. 
 
 **Assumptions** <br />
 * Store payments in a DB and not within application memory. A Postgres database running on a docker image was used. 
 * The Bank simulator is responsible for auth and validation and per request they return a status code and message regarding
-with regard to particular 2-digit code returned. This is defined on there side and we have a small helper function decoding 
+with regard to particular 2-digit code returned. This is defined on there side, and we have a small helper function decoding 
 the status codes in to one of four status as defined in the protos definitions. 
-* Before saving the payment/transaction we first need to at a minimum pass card validation as we don't want to save invalid 
-* data to the DB
+* Before saving the payment/transaction we first need to at a minimum pass card validation as we don't want to save invalid data to the DB
 
 **How it Works** <br />
 In order to run the payments-gateway service, you first need to run the docker containers
@@ -37,18 +36,6 @@ docker-compose up
 This spins up containers for all the required services that the payment gateway will interact with.
 Thereafter, you can run the payments-gateway code either from your favourite IDE or via
 
-
-***Example*** <br />
-Process a payment
-
-![process a payment](Process_Payments_Success.PNG)
-
-Retrieve a payment
-
-![process a payment](Get_Payments_Success.PNG)
-
-
-
 ```shell
 $ go build cmd/payments-gateway/main.go
 
@@ -57,10 +44,22 @@ $ go run cmd/payments-gateway/main.go
 {"level":"info","msg":"Starting payments-gateway gRPC server","port":9090,"time":"2022-03-27T22:52:48+01:00"}
 
 ```
+
+
+***Examples*** <br />
+Process a payment: 
+[BloomRPC](https://github.com/bloomrpc/bloomrpc) was used
+
+![process a payment](Process_Payments_Success.PNG)
+
+Retrieve a payment
+
+![process a payment](Get_Payments_Success.PNG)
+
 ## Upcoming Changes and Features
 ***Submit method in the Bank simulator*** <br />
 Once all transactions are authorized, at the end of the day we should submit all of them to find out if they had been 
-paid/completed. Some work has been done for this in  the bank package already.<br />
+paid/completed. Some work has been done for this in  the bank package already.<br /><br />
 ***Clean up code in regard to TODO's left in the codebase, plus increase test code coverage*** <br />
 Some examples here include optimizing parameters in functions, adding concurrency as to calling methods in the bank 
 simulator and saving to the database

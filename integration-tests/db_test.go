@@ -27,7 +27,7 @@ func TestPgxStorage_AddAndRetrievePaymentInfo(t *testing.T) {
 		request  *protos.ProcessPaymentRequest
 		status   protos.Status
 		reason   string
-		expected protos.GetPaymentResponse
+		expected *protos.GetPaymentResponse
 		err      error
 	}{
 		{
@@ -53,7 +53,7 @@ func TestPgxStorage_AddAndRetrievePaymentInfo(t *testing.T) {
 			},
 			status: protos.Status_APPROVED,
 			reason: "approved and completed successfully",
-			expected: protos.GetPaymentResponse{
+			expected: &protos.GetPaymentResponse{
 				Ref:          refID,
 				CardNumber:   "3782XXXXXXX0005",
 				Amount:       20.5,
@@ -111,7 +111,7 @@ func TestPgxStorage_GetPaymentInfo(t *testing.T) {
 		refID    string
 		status   protos.Status
 		reason   string
-		expected protos.GetPaymentResponse
+		expected *protos.GetPaymentResponse
 		err      error
 	}{
 		{
@@ -119,7 +119,7 @@ func TestPgxStorage_GetPaymentInfo(t *testing.T) {
 			refID:  refID,
 			status: protos.Status_APPROVED,
 			reason: "approved and completed successfully",
-			expected: protos.GetPaymentResponse{
+			expected: &protos.GetPaymentResponse{
 				Ref:          "",
 				CardNumber:   "",
 				PaymentType:  protos.PaymentType_UNDEFINED,
